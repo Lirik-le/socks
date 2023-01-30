@@ -20,7 +20,7 @@ Vue.component('product', {
                 <span v-if="sale">On sale</span>
                 <hr>
 
-                <product-details></product-details>
+                <product-details :details="details"></product-details>
 
                 <span>Sizes:</span>
                 <ul>
@@ -65,7 +65,7 @@ Vue.component('product', {
             description: 'A pair of warm, fuzzy socks',
             selectedVariant: 0,
             altText: 'A pair of socks',
-            inStock: true,
+            details: ['80% cotton', '20% polyester', 'Gender-neutral'],
             variants: [
                 {
                     variantId: 2234,
@@ -129,16 +129,16 @@ Vue.component('product-details', {
         </ul>   
     </div>
     `,
-    data() {
-        return {
-            details: ['80% cotton', '20% polyester', 'Gender-neutral'],
+    props: {
+        details: {
+            type: Array,
         }
-    }
+    },
 })
 
 let app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
     }
 })
