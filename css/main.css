@@ -91,3 +91,7 @@ textarea {
 .lineThrough {
     text-decoration: line-through;
 }
+
+.radioRec {
+    width: 30px;
+}
