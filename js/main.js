@@ -37,9 +37,6 @@ Vue.component('product', {
                 >
                 </div>
 
-                <div class="cart">
-                    <p>Cart({{ cart }})</p>
-                </div>
                 <button
                         @click="addToCart"
                         :disabled="!inStock"
@@ -47,7 +44,7 @@ Vue.component('product', {
                 >
                     Add to cart
                 </button>
-                <button v-show="cart > 0" @click="removeFromCart">Remove from cart</button>
+                <button @click="removeFromCart">Remove from cart</button>
 
             </div>
         </div>
@@ -56,6 +53,9 @@ Vue.component('product', {
         premium: {
             type: Boolean,
             required: true,
+        },
+        cart: {
+            type: Number
         }
     },
     data() {
@@ -78,20 +78,19 @@ Vue.component('product', {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                    variantQuantity: 0,
+                    variantQuantity: 4,
                     onSale: true,
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-            cart: 0,
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         removeFromCart(){
-            this.cart -= 1
+            this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(index) {
             this.selectedVariant = index;
@@ -140,5 +139,16 @@ let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-    }
+        cart: [],
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        deleteCart(id) {
+            if(this.cart.includes(id)) {
+                this.cart.splice(this.cart.indexOf(id), 1)
+            }
+        }
+    },
 })
