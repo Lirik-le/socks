@@ -2,9 +2,16 @@ let eventBus = new Vue()
 
 Vue.component('product', {
     template: `
-        <div class="product">
+        <div id="dragImage" class="product">
             <div class="product-image">
-                <img :alt="altText" :src="image"/>
+                <img  :alt="altText"
+                      :src="image"
+                      @mousedown="openDetails"/>
+                <div v-show="detailsVisibility">Details: 
+                    <ul>
+                        <li v-for="detail in details">{{ detail }}</li>
+                    </ul>
+                </div>
             </div>
 
             <div class="product-info">
@@ -15,9 +22,7 @@ Vue.component('product', {
                 <p
                     v-else
                     :class="{ lineThrough: !inStock }"
-                >
-                    Out of Stock
-                </p>
+                >Out of Stock</p>
                 <span v-if="sale">On sale</span>
                 <hr>
                 
@@ -34,19 +39,15 @@ Vue.component('product', {
                     v-for="(variant, index) in variants"
                     :key="variant.variantId"
                     :style="{ backgroundColor: variant.variantColor }"
-                    @mousedown="updateProduct(index)"
-                >
-                </div>
-                <div>
-                    <button
-                            @click="addToCart"
-                            :disabled="!inStock"
-                            :class="{ disabledButton: !inStock }"
-                    >
-                        Add to cart
-                    </button>
-                    <button @click="removeFromCart">Remove from cart</button>
-                </div>
+                    @mousedown="updateProduct( index)"
+                ></div>
+                
+                <button
+                        @click="addToCart"
+                        :disabled="!inStock"
+                        :class="{ disabledButton: !inStock }"
+                >Add to cart</button>
+                <button @click="removeFromCart">Remove from cart</button>
                 
                 <product-tabs :reviews="reviews"></product-tabs>
             </div>
@@ -87,6 +88,7 @@ Vue.component('product', {
                 }
             ],
             sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+            detailsVisibility: false,
         }
     },
     methods: {
@@ -99,6 +101,9 @@ Vue.component('product', {
         updateProduct(index) {
             this.selectedVariant = index;
         },
+        openDetails() {
+            this.detailsVisibility = !this.detailsVisibility
+        }
     },
     computed: {
         title() {
@@ -318,6 +323,6 @@ let app = new Vue({
             if(this.cart.includes(id)) {
                 this.cart.splice(this.cart.indexOf(id), 1)
             }
-        }
+        },
     },
 })
